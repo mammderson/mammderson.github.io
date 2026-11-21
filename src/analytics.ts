@@ -16,10 +16,14 @@
 //     "Group rates link": someone arrived through a #group-rates or #group-rates-<tab> link (link = that hash).
 //   - "Swag image zoom": the strap wrap teaser image was opened full size.
 //
+// Where visitors came from: share tagged links. Short ?r=<code> links are listed in content/shortLinks.ts
+// and expanded into utm_source / utm_campaign / utm_content before Umami loads.
+//
 // Excluding your own devices: open the site with ?notrack (e.g. mammderson.github.io/?notrack) once in each
 // browser you use. ?notrack=off turns tracking back on. It sets Umami's own "umami.disabled" flag.
 
 import { links } from './content'
+import { shortLinks } from './content/shortLinks'
 
 const UMAMI_SCRIPT_URL = 'https://cloud.umami.is/script.js'
 const UMAMI_WEBSITE_ID = 'c39d73ae-8c92-468d-9d53-3d6731cdf32c'
@@ -64,6 +68,21 @@ function handleOptOutLink() {
   params.delete('notrack')
   const query = params.toString()
   history.replaceState(null, '', location.pathname + (query ? `?${query}` : '') + location.hash)
+}
+
+// ?r=<code> (a short share link, see content/shortLinks.ts) becomes the full UTM tags, before Umami loads,
+// so Umami records the source, campaign and content as usual. Unknown codes are left alone.
+function expandShortLink() {
+  const params = new URLSearchParams(location.search)
+  const code = params.get('r')
+  const shortLink = code ? shortLinks[code] : undefined
+  if (!shortLink) return
+
+  params.delete('r')
+  if (shortLink.source) params.set('utm_source', shortLink.source)
+  params.set('utm_campaign', shortLink.campaign)
+  if (shortLink.content) params.set('utm_content', shortLink.content)
+  history.replaceState(null, '', `${location.pathname}?${params.toString()}${location.hash}`)
 }
 
 function getDeviceId(): string {
@@ -152,6 +171,7 @@ export function trackSectionViews(): () => void {
 // Runs once at startup (see main.tsx). Nothing loads during local development.
 export function startAnalytics() {
   handleOptOutLink()
+  expandShortLink()
   if (!import.meta.env.PROD) return
   loadUmami()
   trackClicks()
