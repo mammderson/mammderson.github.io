@@ -26,4 +26,5 @@ export const shortLinks: Record<string, ShortLink> = {
   e29s2: { source: 'email', campaign: 'launch', content: '2029s2' },
   s29s2: { source: 'slack', campaign: 'launch', content: '2029s2' },
   oac: { campaign: 'launch', content: 'oac' },
+  emba: {source: 'tr', campaign: 'outreach', content: 'emba' }
 }

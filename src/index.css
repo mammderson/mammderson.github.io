@@ -355,9 +355,9 @@ details.group-rates[open] > summary::after { transform: rotate(180deg); }
 /* Menu button: hidden on wide screens, shown on phones */
 .nav-toggle { display: none; }
 
-/* Emoji next to a link label in the phone menu only (e.g. 🎿 Day Activities); hidden in the desktop link row */
+/* Emoji next to a link label in the dropdown menu only (e.g. 🎿 Day Activities); hidden in the desktop link row */
 .nav-phone-emoji { display: none; }
-@media (max-width: 700px) {
+@media (max-width: 960px) {
   .nav-phone-emoji { display: inline; margin-right: 0.3rem; }
 }
 
@@ -366,10 +366,15 @@ details.group-rates[open] > summary::after { transform: rotate(180deg); }
 .nav-toggle-label > span { grid-area: 1 / 1; text-align: center; }
 .nav-toggle-word-hidden { visibility: hidden; }
 
-/* Phones: the links collapse behind a Menu button and open as a two-column grid (no sideways swiping) */
+/* Phones and tablets: the links collapse behind a Menu button and open as a two-column grid (no sideways swiping).
+   960px, not the 700px phone breakpoint: below ~915px the full link row no longer fits beside the brand and
+   wraps to a second line (e.g. iPad portrait), so the menu takes over first. Keep in sync with .nav-tickets-mobile below. */
 @media (max-width: 700px) {
+  .nav-brand-text { display: none; } /* phones: logo only, to keep the top row on one line */
+  main { padding: 0 1rem; }
+}
+@media (max-width: 960px) {
   .nav { flex-wrap: wrap; justify-content: space-between; align-items: center; column-gap: 0.5rem; padding: 0.35rem 1rem; }
-  .nav-brand-text { display: none; } /* logo only, to keep the top row on one line */
   .nav-toggle {
     display: inline-flex;
     align-items: center;
@@ -410,7 +415,6 @@ details.group-rates[open] > summary::after { transform: rotate(180deg); }
     background: var(--ice);
     text-align: center;
   }
-  main { padding: 0 1rem; }
 }
 
 /* Avoid orphan words: balance short display text, "pretty" for paragraphs */
@@ -808,7 +812,7 @@ a.text-link:hover { color: #8bb8e8; } /* UCLA "Lighter Blue" */
 }
 @media (prefers-reduced-motion: reduce) { .nav a.nav-tickets.nav-shine { animation: none; } }
 .nav-tickets-mobile { display: none !important; } /* desktop shows the pill inside the link row instead */
-@media (max-width: 700px) {
+@media (max-width: 960px) { /* same breakpoint as the Menu button */
   /* Same fixed height as the Menu button (.nav-toggle), so the two sit level; the emoji would otherwise make it taller */
   .nav a.nav-tickets-mobile { display: inline-flex !important; align-items: center; height: 2.25rem; margin-left: auto; padding: 0 0.9rem; }
   /* Match the other tiles in the open menu: same shape and padding (the pill's own smaller padding would win otherwise) */
@@ -825,8 +829,9 @@ a.text-link:hover { color: #8bb8e8; } /* UCLA "Lighter Blue" */
   color: var(--deep-blue);
 }
 .nav li a.nav-tickets.nav-shine:hover { background: #f5b800; color: var(--deep-blue); }
-/* Very small phones: drop the PJ Party pill so the top row doesn't wrap. PJ Party is still in the Menu. */
-@media (max-width: 359px) {
+/* Narrow phones (under 375px, e.g. 360px Androids): drop the PJ Party pill so the top row doesn't wrap.
+   "GET PJ PARTY 🎟️" + Menu don't fit beside the logo there. PJ Party is still in the Menu. */
+@media (max-width: 374px) {
   .nav a.nav-tickets-mobile { display: none !important; }
 }
 
