@@ -29,6 +29,20 @@ export default function App() {
   // Start watching which sections people scroll to, once the sections are on the page
   useEffect(() => trackSectionViews(), [])
 
+  // Opening the page with a #section link (e.g. /?r=e29s2#pj-party): the browser scrolls before the images above
+  // have loaded, which pushes the section down and leaves the visitor in the wrong place. Wait for load, then jump.
+  // #group-rates links are handled by GroupRates itself (it also opens the box and picks the tab).
+  useEffect(() => {
+    const scrollToHash = () => {
+      const id = decodeURIComponent(location.hash.slice(1))
+      if (!id || id.startsWith('group-rates')) return
+      document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' })
+    }
+    if (document.readyState === 'complete') scrollToHash()
+    else window.addEventListener('load', scrollToHash, { once: true })
+    return () => window.removeEventListener('load', scrollToHash)
+  }, [])
+
   return (
     <>
       <Nav />

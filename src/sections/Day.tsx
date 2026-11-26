@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { BulletList } from '../components/BulletList'
 import { Callout } from '../components/Callout'
 import { faApple, faGooglePlay } from '@fortawesome/free-brands-svg-icons'
@@ -9,22 +8,8 @@ import { Pill } from '../components/Pill'
 import { Section } from '../components/Section'
 import { links, saturday as s } from '../content'
 
-const ALTERNATIVES_ID = 'alternative-activities'
-
 // Saturday daytime: skiing/snowboarding and alternative activities.
 export function Day() {
-  // Opening the page with #alternative-activities: the browser scrolls before the images above have loaded,
-  // which pushes the subsection down and leaves the visitor in the wrong place. Wait for load, then jump.
-  useEffect(() => {
-    const scrollToAlternatives = () => {
-      if (location.hash !== `#${ALTERNATIVES_ID}`) return
-      document.getElementById(ALTERNATIVES_ID)?.scrollIntoView({ behavior: 'instant', block: 'start' })
-    }
-    if (document.readyState === 'complete') scrollToAlternatives()
-    else window.addEventListener('load', scrollToAlternatives, { once: true })
-    return () => window.removeEventListener('load', scrollToAlternatives)
-  }, [])
-
   // Split the planning text around its {whatsapp} placeholder so the link pill can sit inline
   const [beforeWhatsApp, afterWhatsApp] = s.alternatives.planning.split('{whatsapp}')
 
@@ -78,7 +63,7 @@ export function Day() {
       </div>
 
       {/* id is the target of the FAQ link ("see Day Activities > Alternative Activities") */}
-      <div id={ALTERNATIVES_ID} className="subsection">
+      <div id="alternative-activities" className="subsection">
         <h3 className="subsection-title">{s.alternatives.title}</h3>
         <p>{s.alternatives.intro}</p>
         <div className="activity-cards">
